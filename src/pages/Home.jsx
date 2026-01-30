@@ -1,78 +1,97 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import appwriteService from "../appwrite/config";
-import { Container, PostCard } from '../components'
+import { Container, PostCard } from "../components";
 
 function Home() {
-    const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState([]);
+  const userData = useSelector((state) => state.auth.userData);
 
-    useEffect(() => {
-        appwriteService.getPosts().then((res) => {
-            if (res?.documents) {
-                setPosts(res.documents)
-            }
-        })
-    }, [])
+  useEffect(() => {
+    appwriteService.getPosts().then((res) => {
+      if (res?.documents) setPosts(res.documents);
+    });
+  }, []);
 
-    // Take 4 most recent posts based on creation date
-    const recentPosts = posts
-        .slice() // copy array
-        .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt))
-        .slice(0, 4);
+  const recentPosts = posts
+    .slice()
+    .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt))
+    .slice(0, 4);
 
-    return (
-        <div className="w-full py-12 min-h-screen bg-gradient-to-br from-blue-50 via-pink-50 to-purple-50 rounded-2xl relative overflow-hidden">
-            
-            {/* Cute floating stars */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                <div className="w-2 h-2 bg-pink-300 rounded-full absolute animate-bounce-slow" style={{top: '10%', left: '20%'}} />
-                <div className="w-2 h-2 bg-purple-300 rounded-full absolute animate-bounce-slower" style={{top: '30%', left: '70%'}} />
-                <div className="w-2 h-2 bg-blue-300 rounded-full absolute animate-bounce-slow" style={{top: '60%', left: '40%'}} />
-                <div className="w-2 h-2 bg-pink-200 rounded-full absolute animate-bounce-slower" style={{top: '80%', left: '80%'}} />
+  return (
+    <div className="min-h-screen w-full bg-purple-100">
+
+      
+
+      <Container>
+
+        {/* ===== HERO SECTION ===== */}
+        <section className="pt-32 pb-10 text-center space-y-6">
+          <h1 className="text-5xl font-extrabold">
+            Welcome to <span className="text-pink-500">Postify</span>
+          </h1>
+
+          <p className="text-gray-700 max-w-2xl mx-auto text-lg">
+            Share your thoughts, stories, and creativity in one place.
+          </p>
+
+          <div className="flex gap-5 justify-center">
+            <button className="px-6 py-3 bg-pink-200 rounded-lg">Explore Posts</button>
+            <button className="px-6 py-3 bg-blue-200 rounded-lg">Add New Post</button>
+          </div>
+
+          {!userData?.$id && (
+            <div className="flex justify-center mt-5">
+              <button className="px-10 py-3 bg-[#FFD7C4] rounded-xl shadow-md">
+                Login to read posts →
+              </button>
             </div>
+          )}
+        </section>
 
-            <Container>
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-center mb-8
-                               text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-blue-500">
-                    Welcome to Postify ✨
-                </h1>
+        {/* ===== RECENT POSTS ===== */}
+        {recentPosts.length > 0 && (
+          <section className="my-16">
+            <h2 className="text-3xl font-bold text-center mb-8">Recent Posts</h2>
 
-                {/* Explore / Add Post Buttons */}
-                <div className="flex justify-center gap-4 mb-12">
-                    <button
-                        onClick={() => window.location.href="/all-posts"}
-                        className="px-6 py-3 bg-pink-300 rounded-full font-semibold text-white hover:bg-pink-400 transition-all duration-300 shadow-md hover:shadow-xl"
-                    >
-                        Explore Posts
-                    </button>
-                    <button
-                        onClick={() => window.location.href="/add-post"}
-                        className="px-6 py-3 bg-purple-300 rounded-full font-semibold text-white hover:bg-purple-400 transition-all duration-300 shadow-md hover:shadow-xl"
-                    >
-                        Add New Post
-                    </button>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+              {recentPosts.map((post) => (
+                <PostCard key={post.$id} post={post} variant="home" />
+              ))}
+            </div>
+          </section>
+        )}
 
-                {/* Recent Posts */}
-                {recentPosts.length > 0 && (
-                    <div className="text-center mb-8">
-                        <h2 className="text-2xl sm:text-3xl font-extrabold 
-                                       text-transparent bg-clip-text 
-                                       bg-gradient-to-r from-pink-400 via-purple-400 to-blue-500 
-                                       inline-block relative">
-                            ✨ Recent Posts ✨
-                            <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-pink-200 rounded-full opacity-60"></span>
-                        </h2>
+      </Container>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6 justify-items-strech">
-                            {recentPosts.map((post) => (
-                                <PostCard key={post.$id} post={post} variant="home" />
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </Container>
+      {/* ===== EXPLORE TOPICS — FULL WIDTH ===== */}
+      <section className="py-20 px-6">
+        <h2 className="text-3xl font-bold text-center mb-14">Explore Topics</h2>
+
+        <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-10">
+
+          {[
+            { name: "Travel", img: "/images/travel.jpg" },
+            { name: "Food", img: "/images/food.jpg" },
+            { name: "Tech", img: "/images/tech.jpg" },
+            { name: "Study", img: "/images/study.jpg" },
+            { name: "Music", img: "/images/music.jpg" },
+            { name: "Lifestyle", img: "/images/lifestyle.jpg" },
+          ].map((topic, i) => (
+            <div key={i} className="flex flex-col items-center w-full">
+              <img
+                src={topic.img}
+                className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover shadow-lg hover:scale-105 transition"
+                alt={topic.name}
+              />
+              <p className="mt-3 text-gray-900 text-lg font-semibold">{topic.name}</p>
+            </div>
+          ))}
+
         </div>
-    )
+      </section>
+    </div>
+  );
 }
 
-export default Home
+export default Home;

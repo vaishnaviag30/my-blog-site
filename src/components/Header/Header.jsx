@@ -18,39 +18,33 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 shadow-md rounded-b-xl">
-      <Container className="bg-transparent">
-        <nav className="flex items-center justify-between py-3">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <Link to="/" className="flex items-center">
-              <Logo width="70px" />
-            </Link>
+  <nav className="max-w-screen-2xl mx-auto flex items-center justify-between py-3 px-4">
 
-          </div>
+    {/* Logo */}
+    <Link to="/" className="flex items-center">
+      <Logo width="70px" />
+    </Link>
 
-          {/* Navigation Items */}
-          <ul className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center text-lg font-medium">
-            {navItems.map((item) =>
-              item.active ? (
-                <li key={item.name}>
-                  <button
-                    onClick={() => navigate(item.slug)}
-                    className="px-5 py-2 text-purple-900 font-semibold rounded-full transition-all duration-300 ease-in-out hover:text-white hover:bg-pink-300/40 hover:scale-105"
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ) : null
-            )}
-            {authStatus && (
-              <li>
-                <LogoutBtn />
-              </li>
-            )}
-          </ul>
-        </nav>
-      </Container>
-    </header>
+    {/* Navigation */}
+    <ul className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center text-lg font-medium">
+      {navItems.map((item) =>
+        item.active && (
+          <li key={item.name}>
+            <button
+              onClick={() => navigate(item.slug)}
+              className="px-5 py-2 text-purple-900 font-semibold rounded-full transition-all duration-300 ease-in-out hover:text-white hover:bg-pink-300/40 hover:scale-105"
+            >
+              {item.name}
+            </button>
+          </li>
+        )
+      )}
+      {authStatus && <LogoutBtn />}
+    </ul>
+
+  </nav>
+</header>
+
   )
 }
 

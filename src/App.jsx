@@ -28,13 +28,18 @@ function App() {
     <div className="min-h-screen flex flex-col bg-pastel-bg">
       <Header />
 
-      <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <main className="flex-grow w-full px-4 sm:px-6 lg:px-8">
+
         <Outlet />
-        {location.pathname === '/' && !userData?.$id && (
-          <div className="text-center text-4xl font-bold text-pastel-text mt-8 animate-pulse">
+        {/* {!userData?.$id && (
+          <div className='flex justify-center items-center h-[60vh]'>
+            <div className="text-center text-4xl font-bold text-pastel-text mt-8 animate-pulse padding-8">
             Login to read posts!!
           </div>
-        )}
+          </div>
+
+          
+        )} */}
       </main>
 
       <Footer />
